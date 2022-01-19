@@ -4,12 +4,14 @@
 
 ```sh
 make start_back
+ps aux | grep gostripe_api
 ```
 
 ## Stop Backend
 
 ```sh
 make stop_back
+ps aux | grep gostripe_api
 ```
 
 ## Start Web
