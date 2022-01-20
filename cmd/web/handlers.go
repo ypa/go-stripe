@@ -9,7 +9,7 @@ func (app *application) VirtualTerminal(w http.ResponseWriter, r *http.Request) 
 
 	if err := app.renderTemplate(w, r, "terminal", &templateData{
 		StringMap: stringMap,
-	}); err != nil {
+	}, "stripe-js"); err != nil {
 		app.errorLog.Println(err)
 	}
 }
@@ -46,7 +46,7 @@ func (app *application) PaymentSucceeded(w http.ResponseWriter, r *http.Request)
 
 // ChargeOnce displays the page to one widget
 func (app *application) ChargeOnce(w http.ResponseWriter, r *http.Request) {
-	if err := app.renderTemplate(w, r, "buy-once", nil); err != nil {
+	if err := app.renderTemplate(w, r, "buy-once", nil, "stripe-js"); err != nil {
 		app.errorLog.Println(err)
 	}
 }
