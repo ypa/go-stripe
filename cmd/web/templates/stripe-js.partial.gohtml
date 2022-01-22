@@ -8,9 +8,7 @@
     const payButton = document.getElementById("pay-button");
     const processing = document.getElementById("processing-payment");
 
-    stripe = Stripe("pk_test_9aVBvaKQc7JCKNyChVmzFG8y00POyDBjXl");
-    // TODO: check why this coming up as empty string
-    // stripe = Stripe("{{index .StringMap "publishable_key"}}");
+    stripe = Stripe("{{.StripePublishableKey}}");
 
     function hidePayButton() {
         payButton.classList.add("d-none");
