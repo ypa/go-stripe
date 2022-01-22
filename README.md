@@ -17,5 +17,5 @@ ps aux | grep gostripe_api
 ## Start Web
 
 ```sh
-go run ./cmd/web
+STRIPE_KEY=<stripe publishable key> go run ./cmd/web
 ```
