@@ -19,3 +19,10 @@ ps aux | grep gostripe_api
 ```sh
 STRIPE_KEY=<stripe publishable key> go run ./cmd/web
 ```
+
+## Run Migrations
+
+```sh
+cd migrations
+soda migrate
+```
