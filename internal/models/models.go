@@ -162,13 +162,13 @@ func (m *DBModel) InsertTransaction(txn Transaction) (int, error) {
 	return int(id), nil
 }
 
-// Insert Transaction insters an txn, and returns its id
+// Insert Order inserts a new order, and returns its id
 func (m *DBModel) InsertOrder(order Order) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	stmt := `
-		insert into order
+		insert into orders
 			(widget_id, transaction_id, status_id, quantity,
 				amount, created_at, updated_at)
 			values ($1, $2, $3, $4, $5, $6, $7)
