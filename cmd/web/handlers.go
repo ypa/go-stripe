@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/ypa/go-stripe/internal/cards"
+	"github.com/ypa/go-stripe/internal/models"
 )
 
 // Home displays the home page
@@ -31,7 +32,8 @@ func (app *application) PaymentSucceeded(w http.ResponseWriter, r *http.Request)
 	}
 
 	// read posted data
-	cardHolder := r.Form.Get("cardholder_name")
+	firstName := r.Form.Get("first_name")
+	lastName := r.Form.Get("last_name")
 	email := r.Form.Get("email")
 	paymentIntent := r.Form.Get("payment_intent")
 	paymentMethod := r.Form.Get("payment_method")
@@ -60,13 +62,19 @@ func (app *application) PaymentSucceeded(w http.ResponseWriter, r *http.Request)
 	expiryYear := pm.Card.ExpYear
 
 	// create a new customer
+	customerID, err := app.SaveCustomer(firstName, lastName, email)
+	if err != nil {
+		app.errorLog.Println(err)
+		return
+	}
+
+	app.infoLog.Print(customerID)
 
 	// create a new order
 
 	// create a new transaction
 
 	data := make(map[string]interface{})
-	data["cardholder"] = cardHolder
 	data["email"] = email
 	data["pi"] = paymentIntent
 	data["pm"] = paymentMethod
@@ -82,6 +90,20 @@ func (app *application) PaymentSucceeded(w http.ResponseWriter, r *http.Request)
 	}); err != nil {
 		app.errorLog.Println(err)
 	}
+}
+
+// SaveCustomer saves a customer and returns id
+func (app *application) SaveCustomer(firstName, lastName, email string) (int, error) {
+	customer := models.Customer{
+		FirstName: firstName,
+		LastName:  lastName,
+		Email:     email,
+	}
+	id, err := app.DB.InsertCustomer(customer)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
 // ChargeOnce displays the page to one widget
