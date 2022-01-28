@@ -138,10 +138,11 @@ func (m *DBModel) InsertTransaction(txn Transaction) (int, error) {
 		insert into transactions
 			(amount, currency, last_four, bank_return_code,
 				transaction_status_id, created_at, updated_at)
-			values ($1, $2, $3, $4, $5, $6, $7)
+			values ($1, $2, $3, $4, $5, $6, $7) returning id
 	`
 
-	result, err := m.DB.ExecContext(ctx, stmt,
+	var id int
+	err := m.DB.QueryRowContext(ctx, stmt,
 		txn.Amount,
 		txn.Currency,
 		txn.LastFour,
@@ -149,13 +150,7 @@ func (m *DBModel) InsertTransaction(txn Transaction) (int, error) {
 		txn.TransactionStatusID,
 		time.Now(),
 		time.Now(),
-	)
-
-	if err != nil {
-		return 0, err
-	}
-
-	id, err := result.LastInsertId()
+	).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -171,26 +166,23 @@ func (m *DBModel) InsertOrder(order Order) (int, error) {
 
 	stmt := `
 		insert into orders
-			(widget_id, transaction_id, status_id, quantity,
+			(widget_id, transaction_id, status_id, quantity, customer_id,
 				amount, created_at, updated_at)
-			values ($1, $2, $3, $4, $5, $6, $7)
+			values ($1, $2, $3, $4, $5, $6, $7, $8)
+			returning id
 	`
 
-	result, err := m.DB.ExecContext(ctx, stmt,
+	var id int
+	err := m.DB.QueryRowContext(ctx, stmt,
 		order.WidgetID,
 		order.TransactionID,
 		order.StatusID,
 		order.Quantity,
+		order.CustomerID,
 		order.Amount,
 		time.Now(),
 		time.Now(),
-	)
-
-	if err != nil {
-		return 0, err
-	}
-
-	id, err := result.LastInsertId()
+	).Scan(&id)
 
 	if err != nil {
 		return 0, err
@@ -207,22 +199,17 @@ func (m *DBModel) InsertCustomer(c Customer) (int, error) {
 	stmt := `
 		insert into customers
 			(first_name, last_name, email, created_at, updated_at)
-			values ($1, $2, $3, $4, $5)
+			values ($1, $2, $3, $4, $5) returning id
 	`
 
-	result, err := m.DB.ExecContext(ctx, stmt,
+	var id int
+	err := m.DB.QueryRowContext(ctx, stmt,
 		c.FirstName,
 		c.LastName,
 		c.Email,
 		time.Now(),
 		time.Now(),
-	)
-
-	if err != nil {
-		return 0, err
-	}
-
-	id, err := result.LastInsertId()
+	).Scan(&id)
 
 	if err != nil {
 		return 0, err
