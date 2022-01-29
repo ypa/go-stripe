@@ -73,6 +73,8 @@ type Transaction struct {
 	ExpiryMonth         int       `json:"expiry_month"`
 	ExpiryYear          int       `json:"expiry_year"`
 	BankReturnCode      string    `json:"bank_return_code"`
+	PaymentIntent       string    `json:"payment_intent"`
+	PaymentMethod       string    `json:"payment_method"`
 	TransactionStatusID int       `json:"transaction_status_id"`
 	CreatedAt           time.Time `json:"-"`
 	UpdatedAt           time.Time `json:"-"`
@@ -137,8 +139,9 @@ func (m *DBModel) InsertTransaction(txn Transaction) (int, error) {
 	stmt := `
 		insert into transactions
 			(amount, currency, last_four, bank_return_code, expiry_month, expiry_year,
+				payment_intent, payment_method,
 				transaction_status_id, created_at, updated_at)
-			values ($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id
+			values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning id
 	`
 
 	var id int
@@ -149,6 +152,8 @@ func (m *DBModel) InsertTransaction(txn Transaction) (int, error) {
 		txn.BankReturnCode,
 		txn.ExpiryMonth,
 		txn.ExpiryYear,
+		txn.PaymentIntent,
+		txn.PaymentMethod,
 		txn.TransactionStatusID,
 		time.Now(),
 		time.Now(),
