@@ -130,7 +130,7 @@
             type: 'card',
             card: card,
             billing_details: {
-                email: document.getElementById("cardholder-email").value;
+                email: document.getElementById("cardholder-email").value,
             },
         }).then(stripePaymentMethodHandler);
     }
