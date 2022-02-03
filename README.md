@@ -17,7 +17,7 @@ ps aux | grep gostripe_api
 ## Start Web
 
 ```sh
-STRIPE_KEY=<stripe publishable key> go run ./cmd/web
+STRIPE_KEY=<stripe publishable key> STRIPE_SECRET=<stripe secret> go run ./cmd/web
 ```
 
 ## Run Migrations
